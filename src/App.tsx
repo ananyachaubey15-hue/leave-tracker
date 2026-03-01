@@ -1,24 +1,37 @@
-import Login from "./screens/Login";
+import { useState } from "react";
+
 import Dashboard from "./screens/Dashboard";
 import AddLeave from "./screens/AddLeave";
 import History from "./screens/History";
 import CalendarView from "./screens/CalendarView";
 import OfflineBanner from "./components/OfflineBanner";
+import SplashScreen from "./components/SplashScreen";
 
 function App() {
   const path = window.location.pathname;
+  const [showSplash, setShowSplash] = useState(true);
 
-  if (path === "/dashboard") return <Dashboard />;
-  if (path === "/add-leave") return <AddLeave />;
-  if (path === "/history") return <History />;
-  if (path === "/calendar") return <CalendarView />;
+  // 🐱 Splash first
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
 
-  <>
-  <OfflineBanner />
-  {/* your routes/components */}
-</>
+  // 🎯 Decide which screen to show
+  let Screen;
 
-  return <Login />;
+  if (path === "/dashboard") Screen = <Dashboard />;
+  else if (path === "/add-leave") Screen = <AddLeave />;
+  else if (path === "/history") Screen = <History />;
+  else if (path === "/calendar") Screen = <CalendarView />;
+  else Screen = <Dashboard />;
+
+  // ✅ ALWAYS render banner + screen
+  return (
+    <>
+      <OfflineBanner />
+      {Screen}
+    </>
+  );
 }
 
 export default App;
