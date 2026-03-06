@@ -1,23 +1,9 @@
-import { useEffect } from "react";
-
-type Props = {
-  onFinish: () => void;
-};
-
-function SplashScreen({ onFinish }: Props) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onFinish();
-    }, 1500); // ⏱️ 1.5 sec cozy pause
-
-    return () => clearTimeout(timer);
-  }, [onFinish]);
-
+export default function SplashScreen() {
   return (
     <div
       style={{
         height: "100vh",
-        background: "#0f172a",
+        background: "#F4F1EE",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -25,7 +11,6 @@ function SplashScreen({ onFinish }: Props) {
         gap: 16,
       }}
     >
-      {/* 🐱 sleepy cat logo */}
       <img
         src="/pwa-512.png"
         alt="Sleepy Cat"
@@ -38,15 +23,13 @@ function SplashScreen({ onFinish }: Props) {
 
       <div
         style={{
-          color: "#e5e7eb",
+          color: "#7A4F3A",
           fontSize: 18,
           opacity: 0.8,
         }}
       >
-        LeaveApp waking up…
+        Waking up Leave Tracker…
       </div>
     </div>
   );
 }
-
-export default SplashScreen;

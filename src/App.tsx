@@ -1,22 +1,27 @@
-import { useState } from "react";
-
 import Dashboard from "./screens/Dashboard";
 import AddLeave from "./screens/AddLeave";
 import History from "./screens/History";
 import CalendarView from "./screens/CalendarView";
 import OfflineBanner from "./components/OfflineBanner";
 import SplashScreen from "./components/SplashScreen";
+import { useAuth } from "./context/AuthContext";
+import Welcome from "./screens/Welcome";
 
 function App() {
+  const { mode } = useAuth();
   const path = window.location.pathname;
-  const [showSplash, setShowSplash] = useState(true);
 
-  // 🐱 Splash first
-  if (showSplash) {
-    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  // 🔄 Show splash while checking auth
+  if (mode === "loading") {
+    return <SplashScreen />;
   }
 
-  // 🎯 Decide which screen to show
+  // 👤 Guest mode
+ if (mode === "guest") {
+  return <Welcome />;
+}
+
+  // 🔐 Logged in → show main app
   let Screen;
 
   if (path === "/dashboard") Screen = <Dashboard />;
@@ -25,7 +30,6 @@ function App() {
   else if (path === "/calendar") Screen = <CalendarView />;
   else Screen = <Dashboard />;
 
-  // ✅ ALWAYS render banner + screen
   return (
     <>
       <OfflineBanner />

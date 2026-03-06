@@ -6,8 +6,11 @@ import {
   calculateCarryForward,
 } from "../utils/calculations";
 import LeaveCharts from "../components/LeaveCharts";
+import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
+  const { logout } = useAuth();
+
   const [usedCL, setUsedCL] = useState(0);
   const [usedHPL, setUsedHPL] = useState(0);
   const [monthlyData, setMonthlyData] = useState<
@@ -59,107 +62,67 @@ function Dashboard() {
   const { carryCL, carryHPL } =
     calculateCarryForward(remainingCL, remainingHPL);
 
-  const cardStyle = {
-    background: "#111827",
-    border: "1px solid #1f2937",
-    color: "#e5e7eb",
-    padding: 16,
-    borderRadius: 16,
-    boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
-  };
-
   return (
-    <div
-      style={{
-        padding: 16,
-        maxWidth: 520,
-        margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
-        minHeight: "100vh",
-        background: "#0f172a",
-        color: "#e5e7eb",
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-      }}
-    >
-      {/* 🌙 Cozy Header */}
-      <div>
-        <h2 style={{ margin: 0 }}>Hello there 🐱</h2>
-        <p style={{ marginTop: 4, opacity: 0.7 }}>
-          Track your leaves peacefully
-        </p>
+    <div className="min-h-screen bg-[#F4F1EE] px-6 py-8">
+      <div className="max-w-md mx-auto space-y-6">
+
+        {/* Header */}
+        <div className="flex justify-between items-start">
+          <div>
+            <h2 className="text-2xl font-semibold text-[#7A4F3A]">
+              Hello there 🐱
+            </h2>
+            <p className="text-gray-500 mt-1">
+              Track your leaves peacefully
+            </p>
+          </div>
+
+          <button
+            onClick={logout}
+            className="text-red-400 hover:opacity-70 text-sm"
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* CL Card */}
+        <div className="bg-white rounded-3xl shadow-sm border border-[#E8E2DD] p-6">
+          <h3 className="font-semibold text-[#7A4F3A] mb-3">
+            Casual Leave (CL)
+          </h3>
+          <p>Used: {usedCL}</p>
+          <p>Remaining: {remainingCL}</p>
+          <p>Carry: {carryCL}</p>
+        </div>
+
+        {/* HPL Card */}
+        <div className="bg-white rounded-3xl shadow-sm border border-[#E8E2DD] p-6">
+          <h3 className="font-semibold text-[#7A4F3A] mb-3">
+            Half Pay Leave (HPL)
+          </h3>
+          <p>Used: {usedHPL}</p>
+          <p>Remaining: {remainingHPL}</p>
+          <p>Carry: {carryHPL}</p>
+        </div>
+
+        {/* Charts */}
+        <div className="bg-white rounded-3xl shadow-sm border border-[#E8E2DD] p-6">
+          <LeaveCharts
+            usedCL={usedCL}
+            usedHPL={usedHPL}
+            monthlyData={monthlyData}
+          />
+        </div>
+
+        {/* Add Leave Button */}
+        <button
+          onClick={() => (window.location.href = "/add-leave")}
+          className="w-full bg-[#7A4F3A] text-white py-3 rounded-2xl shadow-md transition hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Add Leave ➕
+        </button>
+
       </div>
-
-      {/* ✅ CL Card */}
-      <div style={cardStyle}>
-        <strong style={{ fontSize: 16 }}>Casual Leave (CL)</strong>
-        <div style={{ marginTop: 8 }}>Used: {usedCL}</div>
-        <div>Remaining: {remainingCL}</div>
-        <div>Carry: {carryCL}</div>
-      </div>
-
-      {/* ✅ HPL Card */}
-      <div style={cardStyle}>
-        <strong style={{ fontSize: 16 }}>Half Pay Leave (HPL)</strong>
-        <div style={{ marginTop: 8 }}>Used: {usedHPL}</div>
-        <div>Remaining: {remainingHPL}</div>
-        <div>Carry: {carryHPL}</div>
-      </div>
-
-      {/* 📊 Charts */}
-      <LeaveCharts
-        usedCL={usedCL}
-        usedHPL={usedHPL}
-        monthlyData={monthlyData}
-      />
-
-      {/* ➕ Primary Action */}
-      <button
-        onClick={() => (window.location.href = "/add-leave")}
-        style={{
-          width: "100%",
-          padding: 14,
-          fontSize: 16,
-          borderRadius: 14,
-          border: "none",
-          background: "#f59e0b",
-          color: "#111827",
-          fontWeight: 700,
-          boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
-        }}
-      >
-        Add Leave ➕
-      </button>
-
-      {/* 📜 Secondary actions */}
-      <button
-        onClick={() => (window.location.href = "/history")}
-        style={{
-          width: "100%",
-          padding: 12,
-          borderRadius: 12,
-          border: "1px solid #1f2937",
-          background: "#111827",
-          color: "#e5e7eb",
-        }}
-      >
-        View History 📜
-      </button>
-
-      <button
-        onClick={() => (window.location.href = "/calendar")}
-        style={{
-          width: "100%",
-          padding: 12,
-          borderRadius: 12,
-          border: "1px solid #1f2937",
-          background: "#111827",
-          color: "#e5e7eb",
-        }}
-      >
-        View Calendar 📅
-      </button>
     </div>
   );
 }

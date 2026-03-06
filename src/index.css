@@ -1,12 +1,20 @@
-/* ===== Base Reset ===== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* =========================================================
+   🌿 CHONKY LUXURY THEME
+========================================================= */
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color: #e5e7eb;
-  background-color: #0f172a;
+  color: #4b3a32; /* warm deep brown text */
+  background-color: #F4F1EE; /* cream base */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,98 +24,117 @@
 
 body {
   margin: 0;
-  background: #0f172a;
-  color: #e5e7eb;
-}
-
-/* ===== Links ===== */
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-/* ===== Buttons ===== */
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #111827;
-  color: #e5e7eb;
-  cursor: pointer;
-  transition: border-color 0.25s, background 0.2s;
-}
-
-button:hover {
-  border-color: #646cff;
-  background: #1f2937;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  background: #F4F1EE;
+  color: #4b3a32;
 }
 
 /* =========================================================
-   📅 Calendar Dark Theme
+   🔗 Links
+========================================================= */
+
+a {
+  font-weight: 500;
+  color: #7A4F3A;
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* =========================================================
+   🔘 Buttons (Base Reset)
+========================================================= */
+
+button {
+  border-radius: 16px;
+  border: none;
+  padding: 0.7em 1.4em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* =========================================================
+   📅 Calendar – Cream Luxury Version
 ========================================================= */
 
 .react-calendar {
   width: 100%;
-  background: #111827;
-  border: 1px solid #1f2937;
-  border-radius: 14px;
-  padding: 12px;
-  color: #e5e7eb;
+  background: #ffffff;
+  border: 1px solid #E8E2DD;
+  border-radius: 20px;
+  padding: 16px;
+  color: #4b3a32;
   font-family: system-ui, sans-serif;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
 }
 
+/* navigation bar */
+
 .react-calendar__navigation {
-  color: #e5e7eb;
+  background: transparent;
+  margin-bottom: 8px;
 }
 
 .react-calendar__navigation button {
-  color: #e5e7eb !important;
-  background: transparent;
-  border-radius: 8px;
+  background: transparent !important;
+  color: #7A4F3A !important;
+  font-weight: 600;
 }
+
+/* weekday strip */
 
 .react-calendar__month-view__weekdays {
-  text-transform: uppercase;
-  font-size: 11px;
-  color: #9ca3af;
+  background: #F4F1EE !important;
+  border-radius: 12px;
+  padding: 6px 0;
 }
 
-/* ✅ DATE VISIBILITY FIX (MOST IMPORTANT) */
+.react-calendar__month-view__weekdays__weekday {
+  color: #A38E83 !important;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* dates */
 
 .react-calendar__tile {
-  color: #e5e7eb !important;
-  font-weight: 500;
-  border-radius: 8px;
+  color: #4b3a32 !important;
+  border-radius: 12px;
   padding: 10px 6px;
+  font-weight: 500;
 }
 
 .react-calendar__tile:enabled:hover {
-  background: #1f2937;
-}
-
-.react-calendar__month-view__days__day--weekend {
-  color: #f87171 !important;
+  background: #EFE7E2;
 }
 
 /* today highlight */
 
 .react-calendar__tile--now {
-  background: #1f2937 !important;
-  border-radius: 8px;
+  background: #EFE7E2 !important;
+  border-radius: 12px;
+}
+
+/* selected day */
+
+.react-calendar__tile--active {
+  background: #7A4F3A !important;
+  color: white !important;
+  border-radius: 12px;
+}
+
+/* neighboring month days */
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #C5B9B1 !important;
 }
 
 /* =========================================================
@@ -115,98 +142,21 @@ button:focus-visible {
 ========================================================= */
 
 .leave-day-cl {
-  background: #ef4444 !important;
+  background: #E57373 !important;
   color: white !important;
-  border-radius: 8px;
-}
-
-.leave-day-hpl {
-  background: #f97316 !important;
-  color: white !important;
-  border-radius: 8px;
-}
-
-/* ===== FORCE DARK CALENDAR GRID ===== */
-
-.react-calendar__viewContainer {
-  background: #111827;
   border-radius: 12px;
 }
 
-/* empty tiles (previous/next month days) */
-
-.react-calendar__month-view__days__day--neighboringMonth {
-  color: #4b5563 !important;
+.leave-day-hpl {
+  background: #F4A261 !important;
+  color: white !important;
+  border-radius: 12px;
 }
 
-/* normal days (most important) */
-
-.react-calendar__month-view__days__day {
-  color: #e5e7eb !important;
-}
-
-/* navigation month label */
-
-.react-calendar__navigation__label {
-  color: #e5e7eb !important;
-  font-weight: 600;
-}
-
-/* weekday header visibility */
-
-.react-calendar__month-view__weekdays__weekday {
-  color: #9ca3af !important;
-}
-
-/* selected day (blue one) */
-
-.react-calendar__tile--active {
-  background: #1f2937 !important;
-  color: #ffffff !important;
-  border-radius: 8px;
-}
-
-/* ===== Calendar Header Dark Fix ===== */
-
-/* top navigation bar (month + arrows) */
-
-.react-calendar__navigation {
-  background: #111827 !important;
-  border-radius: 12px 12px 0 0;
-}
-
-/* month label */
-
-.react-calendar__navigation__label {
-  color: #e5e7eb !important;
-  font-weight: 600;
-}
-
-/* arrows */
-
-.react-calendar__navigation button {
-  background: transparent !important;
-  color: #e5e7eb !important;
-}
-
-/* weekday header strip */
-
-.react-calendar__month-view__weekdays {
-  background: #0f172a !important;
-  border-radius: 8px;
-  padding: 4px 0;
-}
-
-/* weekday text */
-
-.react-calendar__month-view__weekdays__weekday {
-  color: #9ca3af !important;
-  font-weight: 600;
-}
 /* 🟢 Holiday highlight */
 
 .holiday-day {
-  background: #22c55e !important;
+  background: #6BBF8F !important;
   color: white !important;
-  border-radius: 8px;
+  border-radius: 12px;
 }
