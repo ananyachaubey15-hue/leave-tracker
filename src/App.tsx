@@ -4,6 +4,7 @@ import History from "./screens/History";
 import CalendarView from "./screens/CalendarView";
 import OfflineBanner from "./components/OfflineBanner";
 import SplashScreen from "./components/SplashScreen";
+import BottomNav from "./components/BottomNav";   // 👈 HERE
 import { useAuth } from "./context/AuthContext";
 import Welcome from "./screens/Welcome";
 
@@ -30,12 +31,15 @@ function App() {
   else if (path === "/calendar") Screen = <CalendarView />;
   else Screen = <Dashboard />;
 
-  return (
-    <>
-      <OfflineBanner />
+return (
+  <>
+    <OfflineBanner />
+    <div className="pb-16">
       {Screen}
-    </>
-  );
+    </div>
+    <BottomNav />
+  </>
+);
 }
 
 export default App;

@@ -25,37 +25,44 @@ function AddLeave() {
   };
 
   const handleSubmit = async () => {
-    try {
-      await addDoc(collection(db, "leaveRecords"), {
-        leaveType,
-        dateFrom: Timestamp.fromDate(new Date(dateFrom)),
-        dateTo: Timestamp.fromDate(new Date(dateTo)),
-        days: Number(days),
-        year: new Date(dateFrom).getFullYear(),
-        createdAt: Timestamp.now(),
-      });
+  try {
+    await addDoc(collection(db, "leaveRecords"), {
+      leaveType,
+      dateFrom: Timestamp.fromDate(new Date(dateFrom)),
+      dateTo: Timestamp.fromDate(new Date(dateTo)),
+      days: Number(days),
+      year: new Date(dateFrom).getFullYear(),
+      createdAt: Timestamp.now(),
+    });
 
-      alert("Leave added ✅");
-    } catch (error) {
-      console.error(error);
-      alert("Error adding leave ❌");
-    }
-  };
+    alert("Leave added ✅");
+
+    // ✅ redirect AFTER success
+    window.location.href = "/dashboard";
+
+  } catch (error) {
+    console.error(error);
+    alert("Error adding leave ❌");
+  }
+};
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Add Leave ➕</h2>
+  <div className="min-h-screen bg-[#F4F1EE] px-6 py-8">
+    <div className="max-w-md mx-auto space-y-6 bg-white border border-[#E8E2DD] rounded-3xl shadow-sm p-6">
+
+      <h2 className="text-2xl font-semibold text-[#7A4F3A]">
+        Add Leave
+      </h2>
 
       <select
         value={leaveType}
         onChange={(e) => setLeaveType(e.target.value)}
-        style={{ display: "block", marginBottom: 10 }}
+        className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7A4F3A]"
       >
         <option value="CL">Casual Leave (CL)</option>
         <option value="HPL">Half Pay Leave (HPL)</option>
       </select>
 
-      {/* 📅 From Date */}
       <input
         type="date"
         value={dateFrom}
@@ -64,10 +71,9 @@ function AddLeave() {
           setDateFrom(value);
           setDays(calculateDays(value, dateTo));
         }}
-        style={{ display: "block", marginBottom: 10 }}
+        className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3"
       />
 
-      {/* 📅 To Date */}
       <input
         type="date"
         value={dateTo}
@@ -76,20 +82,36 @@ function AddLeave() {
           setDateTo(value);
           setDays(calculateDays(dateFrom, value));
         }}
-        style={{ display: "block", marginBottom: 10 }}
+        className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3"
       />
 
-      {/* 🔢 Auto calculated days */}
       <input
         type="number"
         value={days}
         readOnly
-        style={{ display: "block", marginBottom: 10 }}
+        className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3 bg-gray-50"
       />
 
-      <button onClick={handleSubmit}>Save Leave</button>
+      <button
+        onClick={handleSubmit}
+        className="
+          w-full 
+          bg-[#7A4F3A] 
+          text-white 
+          py-3 
+          rounded-2xl 
+          shadow-md 
+          transition 
+          hover:scale-[1.02] 
+          active:scale-[0.98]
+        "
+      >
+        Save Leave
+      </button>
+
     </div>
-  );
+  </div>
+);
 }
 
 export default AddLeave;

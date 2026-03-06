@@ -114,14 +114,6 @@ function Dashboard() {
           />
         </div>
 
-        {/* Add Leave Button */}
-        <button
-          onClick={() => (window.location.href = "/add-leave")}
-          className="w-full bg-[#7A4F3A] text-white py-3 rounded-2xl shadow-md transition hover:scale-[1.02] active:scale-[0.98]"
-        >
-          Add Leave ➕
-        </button>
-
       </div>
     </div>
   );

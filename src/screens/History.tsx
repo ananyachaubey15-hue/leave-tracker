@@ -51,90 +51,91 @@ function History() {
   };
 
   return (
-    <div
-      style={{
-        padding: 16,
-        maxWidth: 500,
-        margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-      }}
-    >
-      <h2 style={{ marginBottom: 6 }}>Leave History 📜</h2>
+  <div className="min-h-screen bg-[#F4F1EE] px-6 py-8">
+    <div className="max-w-md mx-auto space-y-5">
 
-      {/* 🔄 Loading */}
+      <h2 className="text-2xl font-semibold text-[#7A4F3A]">
+        Leave History
+      </h2>
+
+      {/* Loading */}
       {loading && (
-        <div style={{ opacity: 0.7 }}>Loading leaves…</div>
+        <div className="text-gray-500 text-sm">
+          Loading leaves…
+        </div>
       )}
 
-      {/* 📭 Empty state */}
+      {/* Empty state */}
       {!loading && leaves.length === 0 && (
-        <div style={{ opacity: 0.7 }}>
+        <div className="text-gray-400 text-sm">
           No leave records yet.
         </div>
       )}
 
-      {/* 📋 List */}
+      {/* List */}
       {leaves.map((leave) => (
         <div
           key={leave.id}
-          style={{
-            background: "#111827",
-            border: "1px solid #1f2937",
-            padding: 14,
-            borderRadius: 14,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 12,
-          }}
+          className="
+            bg-white 
+            border border-[#E8E2DD] 
+            rounded-3xl 
+            shadow-sm 
+            p-5 
+            flex justify-between items-center
+          "
         >
-          <div style={{ fontSize: 14 }}>
-            <strong>{leave.leaveType}</strong>
-            <div style={{ opacity: 0.8 }}>
+          <div>
+            <p className="font-semibold text-[#7A4F3A] text-lg">
+              {leave.leaveType}
+            </p>
+            <p className="text-gray-600 text-sm">
               {leave.days} day(s)
-            </div>
-            <div style={{ opacity: 0.6, fontSize: 12 }}>
-              {formatDate(leave.dateFrom)} →{" "}
-              {formatDate(leave.dateTo)}
-            </div>
+            </p>
+            <p className="text-gray-400 text-xs">
+              {formatDate(leave.dateFrom)} → {formatDate(leave.dateTo)}
+            </p>
           </div>
 
           <button
             onClick={() => handleDelete(leave.id)}
-            style={{
-              background: "#ef4444",
-              color: "white",
-              border: "none",
-              borderRadius: 8,
-              padding: "6px 10px",
-              fontSize: 12,
-              cursor: "pointer",
-            }}
+            className="
+              bg-[#E57373] 
+              hover:bg-[#d85f5f] 
+              text-white 
+              px-4 py-2 
+              rounded-xl 
+              text-sm 
+              shadow-sm
+              transition
+            "
           >
-            Delete 🗑️
+            Delete
           </button>
         </div>
       ))}
 
-      {/* 🔙 Back */}
+      {/* Back button */}
       <button
         onClick={() => (window.location.href = "/dashboard")}
-        style={{
-          marginTop: 10,
-          padding: 12,
-          borderRadius: 10,
-          border: "1px solid #1f2937",
-          background: "#111827",
-          color: "#e5e7eb",
-        }}
+        className="
+          w-full 
+          bg-white 
+          border border-[#E8E2DD] 
+          text-[#7A4F3A] 
+          py-3 
+          rounded-2xl 
+          shadow-sm 
+          hover:bg-[#F2EAE4] 
+          transition
+        "
       >
         ← Back to Dashboard
       </button>
+
     </div>
-  );
+  </div>
+);
 }
 
 export default History;
