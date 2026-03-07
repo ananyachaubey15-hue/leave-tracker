@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Dashboard from "./screens/Dashboard";
 import AddLeave from "./screens/AddLeave";
 import History from "./screens/History";
@@ -11,33 +12,41 @@ import Welcome from "./screens/Welcome";
 function App() {
   const { user, loading } = useAuth();
   const path = window.location.pathname;
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // 🔄 Show splash while checking auth
   if (loading) {
     return <SplashScreen />;
   }
 
-  // 🔐 Not logged in → show Welcome
   if (!user) {
     return <Welcome />;
   }
 
-  // ✅ Logged in → show app
   let Screen;
 
-  if (path === "/dashboard") Screen = <Dashboard />;
+  if (path === "/dashboard")
+    Screen = (
+      <Dashboard
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+      />
+    );
   else if (path === "/add-leave") Screen = <AddLeave />;
   else if (path === "/history") Screen = <History />;
   else if (path === "/calendar") Screen = <CalendarView />;
-  else Screen = <Dashboard />;
+  else
+    Screen = (
+      <Dashboard
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+      />
+    );
 
   return (
     <>
       <OfflineBanner />
-      <div className="pb-16">
-        {Screen}
-      </div>
-      <BottomNav />
+      <div className="pb-16">{Screen}</div>
+      <BottomNav hideFab={isDrawerOpen} />
     </>
   );
 }

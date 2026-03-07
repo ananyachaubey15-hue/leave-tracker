@@ -4,7 +4,12 @@ import { db } from "../services/firebase";
 import { useAuth } from "../context/AuthContext";
 import AccountDrawer from "../components/AccountDrawer";
 
-function Dashboard() {
+interface Props {
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function Dashboard({ isDrawerOpen, setIsDrawerOpen }: Props) {
   const { user } = useAuth();
 
   const [policy, setPolicy] = useState<any>(null);
@@ -13,7 +18,6 @@ function Dashboard() {
   const [monthlyData, setMonthlyData] = useState<
     { month: string; days: number }[]
   >([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // 🔁 Load Policy
   const loadPolicy = async () => {
@@ -31,7 +35,7 @@ function Dashboard() {
     loadPolicy();
   }, [user]);
 
-  // 🔁 Load Leaves + Monthly
+  // 🔁 Load Leaves + Monthly Data
   useEffect(() => {
     const fetchLeaves = async () => {
       const snapshot = await getDocs(collection(db, "leaveRecords"));
@@ -110,7 +114,7 @@ function Dashboard() {
           </h2>
         </div>
 
-        {/* CL */}
+        {/* CL Card */}
         <div className="bg-white p-6 rounded-2xl shadow">
           <h3>Casual Leave (CL)</h3>
           <p>Used: {usedCL}</p>
@@ -118,7 +122,7 @@ function Dashboard() {
           <p>Carry: {carryCL}</p>
         </div>
 
-        {/* HPL */}
+        {/* HPL Card */}
         <div className="bg-white p-6 rounded-2xl shadow">
           <h3>Half Pay Leave (HPL)</h3>
           <p>Used: {usedHPL}</p>
@@ -133,7 +137,7 @@ function Dashboard() {
         onClose={() => setIsDrawerOpen(false)}
         usedCL={usedCL}
         usedHPL={usedHPL}
-        monthlyData={monthlyData}   // 🔥 FIXED
+        monthlyData={monthlyData}
         onPolicySaved={loadPolicy}
       />
     </div>
