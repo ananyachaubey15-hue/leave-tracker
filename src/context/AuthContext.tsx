@@ -9,13 +9,10 @@ import {
 
 import type { User } from "firebase/auth";
 
-type AuthMode = "guest" | "user" | "loading";
-
 interface AuthContextType {
   user: User | null;
-  mode: AuthMode;
+  loading: boolean;
   loginWithGoogle: () => Promise<void>;
-  continueAsGuest: () => void;
   logout: () => Promise<void>;
 }
 
@@ -23,44 +20,32 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [mode, setMode] = useState<AuthMode>("loading");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  setMode("loading");
-
-  const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-    console.log("Auth state changed:", firebaseUser);
-    if (firebaseUser) {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
-      setMode("user");
-    } else {
-      setUser(null);
-      setMode("guest");
-    }
-  });
+      setLoading(false);
+    });
 
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, []);
 
-  const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-  };
+ const loginWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  provider.addScope("profile");
+  provider.addScope("email");
 
-  const continueAsGuest = () => {
-    setUser(null);
-    setMode("guest");
-  };
+  await signInWithPopup(auth, provider);
+};
 
   const logout = async () => {
     await signOut(auth);
-    setUser(null);
-    setMode("guest");
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, mode, loginWithGoogle, continueAsGuest, logout }}
+      value={{ user, loading, loginWithGoogle, logout }}
     >
       {children}
     </AuthContext.Provider>

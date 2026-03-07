@@ -157,3 +157,34 @@ button:active {
   color: white !important;
   border-radius: 12px;
 }
+
+ 
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease forwards;
+}
+
+:root[data-theme="cream"] {
+  --bg: #F4F1EE;
+  --card: #ffffff;
+  --text: #4b3a32;
+}
+
+:root[data-theme="dark"] {
+  --bg: #111827;
+  --card: #1f2937;
+  --text: #f3f4f6;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}

@@ -1,7 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 
 export default function Welcome() {
-  const { loginWithGoogle, continueAsGuest } = useAuth();
+  const { loginWithGoogle, } = useAuth();
 
   return (
     <div className="min-h-screen flex items-center justify-center 
@@ -35,19 +35,6 @@ export default function Welcome() {
               "
             >
               Sign in with Google
-            </button>
-
-            <button
-              onClick={continueAsGuest}
-              className="
-                w-full py-3 rounded-xl 
-                bg-white/30 text-white 
-                border border-white/40
-                hover:bg-white/40 
-                transition-all duration-300
-              "
-            >
-              Continue as Guest
             </button>
 
           </div>
