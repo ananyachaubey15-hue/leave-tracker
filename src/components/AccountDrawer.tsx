@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../context/ThemeContext";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import LeaveCharts from "./LeaveCharts";
@@ -24,7 +23,7 @@ function AccountDrawer({
 }: AccountDrawerProps) {
 
   const { user, logout } = useAuth();
-  const { toggleTheme } = useTheme();
+  
 
   const [clAllowed, setClAllowed] = useState(12);
   const [hplAllowed, setHplAllowed] = useState(20);
@@ -179,12 +178,6 @@ function AccountDrawer({
           </button>
         </div>
 
-        <button
-          onClick={toggleTheme}
-          className="w-full py-2 border rounded-lg"
-        >
-          Toggle Theme
-        </button>
 
         <button
           onClick={logout}
