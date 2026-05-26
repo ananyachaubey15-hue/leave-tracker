@@ -1,9 +1,18 @@
-export function getAcademicYear(date: Date) {
-  const month = date.getMonth() + 1;
+export const getAcademicYear = (
+  date: Date
+) => {
 
-  if (month >= 6) {
-    return date.getFullYear();
-  } else {
-    return date.getFullYear() - 1;
+  const year =
+    date.getFullYear();
+
+  const month =
+    date.getMonth();
+
+  // June = 5
+  if (month >= 5) {
+
+    return `${year}-${year + 1}`;
   }
-}
+
+  return `${year - 1}-${year}`;
+};

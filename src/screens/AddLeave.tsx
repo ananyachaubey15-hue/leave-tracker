@@ -280,7 +280,7 @@ function AddLeave() {
 
         <input
           type="number"
-          value={days}
+          value={String(days)}
           readOnly
           className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3 bg-gray-50"
         />

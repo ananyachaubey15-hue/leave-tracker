@@ -10,7 +10,7 @@ import { db } from "../services/firebase";
 
 export async function createAcademicPolicyIfNeeded(
   userId: string,
-  academicYear: any
+  academicYear: string
 ) {
 
   const policyId =
@@ -22,14 +22,16 @@ export async function createAcademicPolicyIfNeeded(
     policyId
   );
 
-  const snapshot =
+  const existingPolicy =
     await getDoc(policyRef);
 
-  // POLICY ALREADY EXISTS
-  if (snapshot.exists()) return;
+  // POLICY EXISTS
+  if (existingPolicy.exists()) {
+    return;
+  }
 
   // -----------------------------
-  // FIND PREVIOUS YEAR
+  // PREVIOUS YEAR
   // -----------------------------
 
   const startYear =
@@ -43,10 +45,6 @@ export async function createAcademicPolicyIfNeeded(
   const previousPolicyId =
     `${userId}_${previousYear}`;
 
-  // -----------------------------
-  // FETCH PREVIOUS POLICY
-  // -----------------------------
-
   const previousPolicyRef = doc(
     db,
     "leavePolicies",
@@ -56,10 +54,11 @@ export async function createAcademicPolicyIfNeeded(
   const previousPolicySnapshot =
     await getDoc(previousPolicyRef);
 
+  // DEFAULT CARRY
   let carryHPL = 0;
 
   // -----------------------------
-  // CALCULATE REMAINING HPL
+  // IF PREVIOUS POLICY EXISTS
   // -----------------------------
 
   if (
@@ -69,6 +68,7 @@ export async function createAcademicPolicyIfNeeded(
     const previousPolicy =
       previousPolicySnapshot.data();
 
+    // FETCH ALL LEAVES
     const leavesSnapshot =
       await getDocs(
         collection(
@@ -85,6 +85,7 @@ export async function createAcademicPolicyIfNeeded(
         const data: any =
           document.data();
 
+        // ONLY PREVIOUS YEAR HPL
         if (
           data.userId === userId &&
           data.academicYear === previousYear &&
@@ -98,13 +99,16 @@ export async function createAcademicPolicyIfNeeded(
       }
     );
 
-    // PREVIOUS TOTAL HPL
+    // TOTAL AVAILABLE HPL
     const totalPreviousHPL =
-      (previousPolicy.hplAllowed || 0)
-      +
-      (previousPolicy.carryHPL || 0);
+      Number(
+        previousPolicy.hplAllowed || 0
+      ) +
+      Number(
+        previousPolicy.carryHPL || 0
+      );
 
-    // REMAINING
+    // REMAINING HPL
     carryHPL =
       Math.max(
         totalPreviousHPL - usedHPL,
@@ -122,17 +126,17 @@ export async function createAcademicPolicyIfNeeded(
 
     academicYear,
 
+    // FIXED RULES
     clAllowed: 12,
 
     hplAllowed: 6,
 
-    carryEnabled: true,
-
+    // CL NEVER CARRIES
     carryCL: 0,
 
+    // HPL AUTO CARRY
     carryHPL,
 
-    createdAt:
-      new Date(),
+    createdAt: new Date(),
   });
 }
