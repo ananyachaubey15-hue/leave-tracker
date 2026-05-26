@@ -1,29 +1,51 @@
 export const TOTAL_LEAVES = {
   CL: 12,
-  HPL: 20,
+  HPL: 6,
 };
 
 export const MAX_CARRY = {
-  CL: 6,
-  HPL: 10,
+  HPL: 12,
 };
 
+
+// REMAINING LEAVES
 export function calculateRemaining(
   usedCL: number,
-  usedHPL: number
+  usedHPL: number,
+  carryHPL: number = 0
 ) {
-  const remainingCL = TOTAL_LEAVES.CL - usedCL;
-  const remainingHPL = TOTAL_LEAVES.HPL - usedHPL;
 
-  return { remainingCL, remainingHPL };
+  // CL resets every year
+  const remainingCL = TOTAL_LEAVES.CL - usedCL;
+
+  // HPL includes previous carry
+  const totalHPL = TOTAL_LEAVES.HPL + carryHPL;
+
+  const remainingHPL = totalHPL - usedHPL;
+
+  return {
+    remainingCL: Math.max(0, remainingCL),
+    remainingHPL: Math.max(0, remainingHPL),
+  };
 }
 
+
+
+// CARRY FORWARD CALCULATION
 export function calculateCarryForward(
-  remainingCL: number,
   remainingHPL: number
 ) {
+
   return {
-    carryCL: Math.min(MAX_CARRY.CL, Math.max(0, remainingCL)),
-    carryHPL: Math.min(MAX_CARRY.HPL, Math.max(0, remainingHPL)),
+
+    // CL NEVER carries
+    carryCL: 0,
+
+    // HPL carries with max limit
+    carryHPL: Math.min(
+      MAX_CARRY.HPL,
+      Math.max(0, remainingHPL)
+    ),
+
   };
 }
