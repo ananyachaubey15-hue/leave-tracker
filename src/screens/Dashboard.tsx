@@ -13,8 +13,6 @@ import { useAuth } from "../context/AuthContext";
 
 import AccountDrawer from "../components/AccountDrawer";
 
-import { getAcademicYear } from "../utils/academicYear";
-
 interface Props {
   isDrawerOpen: boolean;
   setIsDrawerOpen: React.Dispatch<
@@ -29,28 +27,40 @@ function Dashboard({
 
   const { user } = useAuth();
 
-  const [policy, setPolicy] = useState<any>(null);
+  const [policy, setPolicy] =
+    useState<any>(null);
 
-  const [usedCL, setUsedCL] = useState(0);
+  const [usedCL, setUsedCL] =
+    useState(0);
 
-  const [usedHPL, setUsedHPL] = useState(0);
+  const [usedHPL, setUsedHPL] =
+    useState(0);
 
-  const [monthlyData, setMonthlyData] = useState<
-    { month: string; days: number }[]
-  >([]);
+  const [monthlyData, setMonthlyData] =
+    useState<
+      { month: string; days: number }[]
+    >([]);
 
   // CURRENT ACADEMIC YEAR
-  const currentAcademicYear =
-    getAcademicYear(new Date());
+  const [
+    currentAcademicYear,
+    setCurrentAcademicYear
+  ] = useState("");
 
   // LOAD POLICY
-  const loadPolicy = async () => {
+  const loadPolicy = async (
+    academicYear?: string
+  ) => {
 
     if (!user) return;
 
-    // IMPORTANT CHANGE
+    const year =
+      academicYear || "";
+
+    if (!year) return;
+
     const policyId =
-      `${user.uid}_${currentAcademicYear}`;
+      `${user.uid}_${year}`;
 
     const policyRef = doc(
       db,
@@ -58,7 +68,8 @@ function Dashboard({
       policyId
     );
 
-    const snapshot = await getDoc(policyRef);
+    const snapshot =
+      await getDoc(policyRef);
 
     if (snapshot.exists()) {
 
@@ -66,13 +77,13 @@ function Dashboard({
 
     } else {
 
-      setPolicy(null);
+      setPolicy({
+        clAllowed: 12,
+        hplAllowed: 6,
+        carryHPL: 0,
+      });
     }
   };
-
-  useEffect(() => {
-    loadPolicy();
-  }, [user]);
 
   // LOAD LEAVES
   useEffect(() => {
@@ -81,57 +92,97 @@ function Dashboard({
 
       if (!user) return;
 
-      const snapshot = await getDocs(
-        collection(db, "leaveRecords")
-      );
+      const snapshot =
+        await getDocs(
+          collection(
+            db,
+            "leaveRecords"
+          )
+        );
 
       let cl = 0;
 
       let hpl = 0;
 
-      const monthlyMap: Record<string, number> = {};
+      const monthlyMap:
+        Record<string, number> = {};
+
+      let latestAcademicYear = "";
 
       snapshot.forEach((document) => {
 
-        const data: any = document.data();
+        const data: any =
+          document.data();
 
         // ONLY CURRENT USER
-        if (data.userId !== user.uid) return;
-
-        // ONLY CURRENT ACADEMIC YEAR
         if (
-          data.academicYear !== currentAcademicYear
+          data.userId !== user.uid
         ) return;
 
-        // CL
-        if (data.leaveType === "CL") {
+        // SAVE LATEST ACADEMIC YEAR
+        if (
+          data.academicYear
+        ) {
 
-          cl += Number(data.days || 0);
+          latestAcademicYear =
+            data.academicYear;
+        }
+
+        // CL
+        if (
+          data.leaveType === "CL"
+        ) {
+
+          cl += Number(
+            data.days || 0
+          );
         }
 
         // HPL
-        if (data.leaveType === "HPL") {
+        if (
+          data.leaveType === "HPL"
+        ) {
 
-          hpl += Number(data.days || 0);
+          hpl += Number(
+            data.days || 0
+          );
         }
 
         // MONTHLY DATA
-        if (data.dateFrom?.seconds) {
+        if (
+          data.dateFrom?.seconds
+        ) {
 
-          const month = new Date(
-            data.dateFrom.seconds * 1000
-          ).toLocaleString(
-            "default",
-            {
-              month: "short",
-            }
-          );
+          const month =
+            new Date(
+              data.dateFrom.seconds
+              * 1000
+            ).toLocaleString(
+              "default",
+              {
+                month: "short",
+              }
+            );
 
           monthlyMap[month] =
-            (monthlyMap[month] || 0)
-            + Number(data.days || 0);
+            (
+              monthlyMap[month]
+              || 0
+            )
+            +
+            Number(
+              data.days || 0
+            );
         }
       });
+
+      setCurrentAcademicYear(
+        latestAcademicYear
+      );
+
+      await loadPolicy(
+        latestAcademicYear
+      );
 
       setUsedCL(cl);
 
@@ -139,7 +190,9 @@ function Dashboard({
 
       setMonthlyData(
 
-        Object.entries(monthlyMap).map(
+        Object.entries(
+          monthlyMap
+        ).map(
           ([month, days]) => ({
             month,
             days,
@@ -155,7 +208,9 @@ function Dashboard({
   // CL REMAINING
   const remainingCL =
     Math.max(
-      (policy?.clAllowed ?? 0)
+      (
+        policy?.clAllowed ?? 12
+      )
       - usedCL,
       0
     );
@@ -164,8 +219,13 @@ function Dashboard({
   const remainingHPL =
     Math.max(
       (
-        (policy?.hplAllowed ?? 0)
-        + (policy?.carryHPL ?? 0)
+        (
+          policy?.hplAllowed ?? 6
+        )
+        +
+        (
+          policy?.carryHPL ?? 0
+        )
       )
       - usedHPL,
       0
@@ -176,12 +236,7 @@ function Dashboard({
 
   // HPL CARRY
   const carryHPL =
-    policy?.carryEnabled
-      ? Math.min(
-          remainingHPL,
-          policy?.carryHPLMax ?? 0
-        )
-      : 0;
+    remainingHPL;
 
   return (
 
@@ -190,8 +245,11 @@ function Dashboard({
       <div className="max-w-md mx-auto space-y-6">
 
         {/* HEADER */}
+
         <div
-          onClick={() => setIsDrawerOpen(true)}
+          onClick={() =>
+            setIsDrawerOpen(true)
+          }
           className="cursor-pointer flex items-center gap-4"
         >
 
@@ -208,7 +266,10 @@ function Dashboard({
 
               <div className="w-full h-full bg-[#7A4F3A] text-white flex items-center justify-center">
 
-                {user?.displayName?.charAt(0)}
+                {
+                  user?.displayName
+                  ?.charAt(0)
+                }
 
               </div>
             )}
@@ -230,6 +291,7 @@ function Dashboard({
         </div>
 
         {/* CL CARD */}
+
         <div className="bg-white p-6 rounded-2xl shadow">
 
           <h3 className="text-lg font-semibold mb-2">
@@ -239,7 +301,7 @@ function Dashboard({
           <p>
             Allowed:
             {" "}
-            {policy?.clAllowed ?? 0}
+            {policy?.clAllowed ?? 12}
           </p>
 
           <p>
@@ -263,6 +325,7 @@ function Dashboard({
         </div>
 
         {/* HPL CARD */}
+
         <div className="bg-white p-6 rounded-2xl shadow">
 
           <h3 className="text-lg font-semibold mb-2">
@@ -272,7 +335,7 @@ function Dashboard({
           <p>
             Allowed:
             {" "}
-            {policy?.hplAllowed ?? 0}
+            {policy?.hplAllowed ?? 6}
           </p>
 
           <p>
