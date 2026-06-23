@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 import {
@@ -32,6 +33,9 @@ function AddLeave() {
 
   const [days, setDays] =
     useState(0);
+
+  const [reason, setReason] =
+    useState("");
 
   // Calculate total leave days
   const calculateDays = (
@@ -168,6 +172,8 @@ function AddLeave() {
 
           leaveType,
 
+          reason,
+
           dateFrom:
             Timestamp.fromDate(
               new Date(dateFrom)
@@ -274,6 +280,18 @@ function AddLeave() {
             );
           }}
           className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3"
+        />
+
+        {/* Reason */}
+
+        <textarea
+          value={reason}
+          onChange={(e) =>
+            setReason(e.target.value)
+          }
+          placeholder="Optional reason..."
+          rows={3}
+          className="w-full border border-[#E8E2DD] rounded-xl px-4 py-3 resize-none"
         />
 
         {/* Days */}
